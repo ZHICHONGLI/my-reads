@@ -7,10 +7,10 @@ class BookComponent extends Component {
 
   render() {
     const {book} = this.props; 
-    return (
+    return (book &&
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={{ width: 128, height: 174, backgroundImage: `url(${book.imageLinks.smallThumbnail})`}}></div>
+          <div className="book-cover" style={{ width: 128, height: 174, backgroundImage: `url(${book?book.imageLinks.smallThumbnail:null})`}}></div>
           
           <div className="book-shelf-changer">
             <select>
