@@ -1,11 +1,12 @@
 import React, { Component }   from 'react';
 import * as BooksAPI          from '../BooksAPI.js';
+import { Link }               from 'react-router-dom';
+import BookComponent             from '../components/BookComponent';
 
 class SearchPage extends Component {
 
   constructor(props) {
     super(props);
-    // this.searchPage = this.props.searchPage(event);
   };
 
   state = {
@@ -16,10 +17,14 @@ class SearchPage extends Component {
   searchBooks(query, results) {
     this.setState({searchQuery: query});
     BooksAPI.search(query, results).then(books => {
-      this.setState({
-        searchQuery: this.state.searchQuery,
-        searchResult: books
-      });
+      if(books.error) {
+          this.setState({searchResult: []})
+      }else{
+        this.setState({
+          searchQuery: this.state.searchQuery,
+          searchResult: books
+        });
+      }
       console.log(this.state.searchResult);
     })
   };
@@ -29,7 +34,7 @@ class SearchPage extends Component {
     return (
       <div className="search-books">
         <div className="search-books-bar">
-          <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
+          <Link to="/" className="close-search">Close</Link>
           <div className="search-books-input-wrapper">
             {/* 
               NOTES: The search from BooksAPI is limited to a particular set of search terms.
@@ -42,31 +47,20 @@ class SearchPage extends Component {
             <input onChange={event => this.searchBooks(event.target.value, 20)} type="text" placeholder="Search by title or author"/>
           </div>
         </div>
-        <div className="search-books-results">
-            { books.map(book => {
-              <ol className="books-grid">
-                <div className="book">
-                  <div className="book-top">
-                    <div className="book-cover" style={{ width: 128, height: 174, backgroundImage: 'url("http://books.google.com/books/content?id=1q_xAwAAQBAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE712CA0cBYP8VKbEcIVEuFJRdX1k30rjLM29Y-dw_qU1urEZ2cQ42La3Jkw6KmzMmXIoLTr50SWTpw6VOGq1leINsnTdLc_S5a5sn9Hao2t5YT7Ax1RqtQDiPNHIyXP46Rrw3aL8&source=gbs_api")' }}></div>
-                    <div className="book-shelf-changer">
-                      <select>
-                        <option value="none" disabled>Move to...</option>
-                        <option value="currentlyReading">Currently Reading</option>
-                        <option value="wantToRead">Want to Read</option>
-                        <option value="read">Read</option>
-                        <option value="none">None</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="book-title">{book.title}</div>
-                  <div className="book-authors">{book.authors.map(author => {
-                    return {author}
-                  })}
-                  </div>
-                </div>
-              </ol>
-            })}
-          
+        <div className="search-books-results bookdhelf-books">
+          <ol className="books-grid">
+            { books.length ?             
+              books.map((book, index) => (
+                <li key={index}>
+                  <BookComponent
+                    book={book}
+                  />
+                </li>
+              ))
+              :
+              <div>No Results</div>      
+            }
+          </ol>  
         </div>
         {this.state.searchResult.error && <p>No Result</p>}
       </div>
