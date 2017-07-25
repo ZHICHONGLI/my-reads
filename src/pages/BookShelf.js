@@ -18,6 +18,11 @@ class BookShelf extends Component {
     })
   };
   
+  changeShelf(book, shelf) {
+    console.log(book);
+    console.log(shelf)
+  };
+
   render() {
     return (
       <div>
@@ -36,6 +41,7 @@ class BookShelf extends Component {
                     <li key={index}>
                       <BookComponent
                         book={book}
+                        handleChange={(book,shelf)=>this.changeShelf(book, shelf)}
                       />
                     </li>
                   ))
@@ -53,6 +59,7 @@ class BookShelf extends Component {
                     <li key={index}>
                       <BookComponent
                         book={book}
+                        handleChange={(book,shelf)=>this.changeShelf(book, shelf)}
                       />
                     </li>
                   ))
@@ -70,6 +77,7 @@ class BookShelf extends Component {
                     <li key={index}>
                       <BookComponent
                         book={book}
+                        handleChange={(book,shelf)=>this.changeShelf(book, shelf)}
                       />
                     </li>
                   ))
