@@ -19,8 +19,11 @@ class BookShelf extends Component {
   };
   
   changeShelf(book, shelf) {
-    console.log(book);
-    console.log(shelf)
+    BooksAPI.update(book, shelf).then(res => {
+      BooksAPI.getAll().then(res => {
+        this.setState({bookShelf: res})
+      });
+    });
   };
 
   render() {
