@@ -10,17 +10,21 @@ class SearchPage extends Component {
   };
 
   state = {
-    searchQuery: "",
+    bookShelf: [],
     searchResult: []
   };
 
+  componentDidMount() {
+    BooksAPI.getAll().then(res => {
+      this.setState({bookShelf: res});
+    });
+  }
+  
   searchBooks(query, results) {
-    console.log(query);
     if(!query) {
       this.setState({searchResult: []})
     }else {
       BooksAPI.search(query, results).then(books => {
-        console.log(books);
         if(books.error || !books) {
             this.setState({searchResult: []})
         }else{
@@ -29,28 +33,25 @@ class SearchPage extends Component {
             searchResult: books
           });
         }
-        console.log(this.state.searchResult);
       })
     }
+  };
+
+  handleChange(book, shelf) {
+    const idx = this.state.searchResult.indexOf(book);
+    this.state.searchResult[idx].shelf = shelf;
+    this.setState({searchResult :this.state.searchResult});
+    BooksAPI.update(book, shelf).then(res =>{
+    })
   };
 
   render() {
     let books = this.state.searchResult;
     return (
-      <div className="search-books">
-      <button onClick={()=>console.log(this.state.searchResult)}>res</button>
-      
+      <div className="search-books">      
         <div className="search-books-bar">
           <Link to="/" className="close-search">Close</Link>
           <div className="search-books-input-wrapper">
-            {/* 
-              NOTES: The search from BooksAPI is limited to a particular set of search terms.
-              You can find these search terms here:
-              https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-              
-              However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-              you don't find a specific author or title. Every search is limited by search terms.
-            */}
             <form>
               <input onChange={event => this.searchBooks(event.target.value, 20)} type="text" placeholder="Search by title or author"/>
             </form>
@@ -59,13 +60,20 @@ class SearchPage extends Component {
         <div className="search-books-results bookdhelf-books">
           <ol className="books-grid">
             { books.length ?             
-              books.map((book, index) => (
+              books.map((book, index) => {
+                this.state.bookShelf.map(bookItem => {
+                  if (book.id === bookItem.id) {
+                    book.shelf = bookItem.shelf;
+                  }
+                })
+                return (
                 <li key={index}>
                   <BookComponent
                     book={book}
+                    handleChange={(book, shelf)=>this.handleChange(book, shelf)}
                   />
-                </li>
-              ))
+                </li> )
+              })
               :
               <div>No Results</div>      
             }
