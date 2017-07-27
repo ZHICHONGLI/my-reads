@@ -53,7 +53,10 @@ class SearchPage extends Component {
           <Link to="/" className="close-search">Close</Link>
           <div className="search-books-input-wrapper">
             <form>
-              <input onChange={event => this.searchBooks(event.target.value, 20)} type="text" placeholder="Search by title or author"/>
+              <input
+                onChange={event => this.searchBooks(event.target.value, 20)}
+                type="text"
+                placeholder="Search by title or author"/>
             </form>
           </div>
         </div>
