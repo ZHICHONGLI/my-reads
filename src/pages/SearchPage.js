@@ -1,7 +1,7 @@
 import React, { Component }   from 'react';
 import * as BooksAPI          from '../BooksAPI.js';
 import { Link }               from 'react-router-dom';
-import BookComponent             from '../components/BookComponent';
+import BookComponent          from '../components/BookComponent';
 
 class SearchPage extends Component {
 
@@ -32,6 +32,7 @@ class SearchPage extends Component {
             searchQuery: this.state.searchQuery,
             searchResult: books
           });
+          console.log(books)
         }
       })
     }
@@ -64,6 +65,7 @@ class SearchPage extends Component {
           <ol className="books-grid">
             { books.length ?             
               books.map((book, index) => {
+                book.shelf = "none";
                 this.state.bookShelf.map(bookItem => {
                   if (book.id === bookItem.id) {
                     book.shelf = bookItem.shelf;
